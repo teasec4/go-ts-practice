@@ -5,8 +5,12 @@ const rl = readline.createInterface({
   output: process.stdout,
 });
 
-function question(prompt: string): Promise<string>{
-  return new Promise((resolve) => rl.question(prompt, resolve))
+function question(prompt: string): Promise<string> {
+  return new Promise((resolve) => {
+    rl.question(prompt, (answer) => {
+      resolve(answer);
+    });
+  });
 }
 
 async function main() {
