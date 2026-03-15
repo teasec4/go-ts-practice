@@ -57,16 +57,17 @@ func main() {
 	}))
 
 	// Serve static files
-	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
-
-	http.HandleFunc("/", handler.IndexHandler)
-
-	http.HandleFunc("/user", corsMiddleware(userHandler.FindUserByID))
+	fs := http.FileServer(http.Dir("./static"))
+	http.Handle("/static/", http.StripPrefix("/static/", fs))
 
 	// Update app.js to use correct path
 	http.HandleFunc("/app.js", func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFile(w, r, "static/app.js")
 	})
+		
+	http.HandleFunc("/", handler.IndexHandler)
+
+	http.HandleFunc("/user", corsMiddleware(userHandler.FindUserByID))
 
 	log.Println("Server running at :8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))
